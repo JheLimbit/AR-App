@@ -1,0 +1,55 @@
+name: example
+description: A new Flutter project.
+version: 1.0.0+1
+publish_to: none
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  camera_macos: ^0.0.6+2
+  apple_vision_pose:
+    path: ../Github/Apple Vision Packages/apple_vision_pose
+  apple_vision_hand:
+    path: ../Github/Apple Vision Packages/apple_vision_hand
+  cupertino_icons: ^1.0.2
+  three_dart_jsm: ^0.0.10
+  image_compression: ^1.0.3
+  path_provider: ^2.0.14
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    # - assets/helvetiker_bold.typeface.json
+    - assets/
+    - assets/pingfang.ttf
+    - assets/kenpixel.ttf
+    - assets/winter.jpg
+    - assets/lut.cube
+    - assets/demo.png
+    - assets/KOMO-v5.cube
+    - assets/screenshots/
+    - assets/models/obj/male02/
+    - assets/models/json/
+    - assets/models/gltf/
+    - assets/models/gltf/test/
+    - assets/models/gltf/RobotExpressive/
+    - assets/models/gltf/DamagedHelmet/glTF/
+    - assets/models/gltf/AnimatedMorphSphere/glTF/
+    - assets/models/svg/
+    - assets/models/fbx/
+    - assets/models/
+    - assets/textures/
+    - assets/textures/equirectangular/
+    - assets/textures/terrain/
+    - assets/textures/patterns/
+    - assets/textures/sprites/

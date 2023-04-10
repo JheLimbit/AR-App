@@ -1,0 +1,31 @@
+name: apple_vision
+description: A new Flutter package project.
+version: 0.0.1
+repository: https://github.com/juliansteenbakker/mobile_scanner
+publish_to: none
+
+environment:
+  sdk: '>=2.18.6 <3.0.0'
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  apple_vision_commons:
+    path: ../apple_vision_commons
+  apple_vision_face:
+    path: ../apple_vision_face
+  apple_vision_pose:
+    path: ../apple_vision_pose
+  apple_vision_hand:
+    path: ../apple_vision_hand
+  apple_vision_object:
+    path: ../apple_vision_object
+  apple_vision_scanner:
+    path: ../apple_vision_scanner
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
