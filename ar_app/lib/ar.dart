@@ -162,7 +162,6 @@ class _ARScreenState extends State<ARScreen> {
   // Initializes 3D Scene
   Future<void> initPage() async {
     scene = THREE.Scene();
-
     camera = THREE.Camera();
     camera = THREE.PerspectiveCamera(60, width / height, 1, 1000);
     camera.position.set(0, 0, 450);
@@ -402,20 +401,14 @@ class _ARScreenState extends State<ARScreen> {
     if (poseData == null || poseData!.poses.isEmpty) return [];
     // if (handData == null || handData!.poses.isEmpty) return [];
     Map<Pose.Joint, Color> colors = {
-      // Elbow
-      Pose.Joint.rightForearm: Colors.yellow,
-      // Hip
-      Pose.Joint.rightUpLeg: Colors.green,
-      // Wrist
-      Pose.Joint.rightHand: Colors.blue,
+      Pose.Joint.rightForearm: Colors.yellow, // Elbow
+      Pose.Joint.rightUpLeg: Colors.green, // Hip
+      Pose.Joint.rightHand: Colors.blue, // Wrist
       Pose.Joint.rightShoulder: Colors.red,
       Pose.Joint.leftShoulder: Colors.red,
-      // Elbow
-      Pose.Joint.leftForearm: Colors.yellow,
-      // Hip
-      Pose.Joint.leftUpLeg: Colors.green,
-      // Wrist
-      Pose.Joint.leftHand: Colors.blue,
+      Pose.Joint.leftForearm: Colors.yellow, // Elbow
+      Pose.Joint.leftUpLeg: Colors.green, // Hip
+      Pose.Joint.leftHand: Colors.blue, // Wrist
     };
 
     // Map<Hand.FingerJoint, Color> handColors = {
@@ -485,6 +478,7 @@ class _ARScreenState extends State<ARScreen> {
           rightShoulder.y = poseData!.poses[i].location.y;
         }
 
+        // Adds colored points onto screen
         widgets.add(Positioned(
             bottom: poseData!.poses[i].location.y,
             left: poseData!.poses[i].location.x,
@@ -498,6 +492,7 @@ class _ARScreenState extends State<ARScreen> {
       }
     }
 
+    // Updates the arm model location and rotation
     setLocation();
     return widgets;
   }
