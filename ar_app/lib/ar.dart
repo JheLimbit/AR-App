@@ -95,14 +95,16 @@ class _ARScreenState extends State<ARScreen> {
   double locationY = 240;
   bool isVisible = false;
 
-  var point1 = Pose.PosePoint(0, 0);
-  var point2 = Pose.PosePoint(0, 0);
+  var point1;
+  var point2;
 
-  var point3 = Pose.PosePoint(0, 0);
-  var point4 = Pose.PosePoint(0, 0);
+  var rightElbow;
+  var rightShoulder;
+  var rightWrist;
 
-  Pose.PosePoint elbow = Pose.PosePoint(0, 0);
-  Pose.PosePoint shoulder = Pose.PosePoint(0, 0);
+  var leftElbow;
+  var leftShoulder;
+  var leftWrist;
 
   var vec = THREE.Vector3();
   var pos = THREE.Vector3();
@@ -188,7 +190,7 @@ class _ARScreenState extends State<ARScreen> {
       }
     });
 
-    object.visible = true;
+    object.visible = false;
     scene.add(object);
 
     var axesHelper = THREE.AxesHelper(1000);
@@ -462,19 +464,25 @@ class _ARScreenState extends State<ARScreen> {
 
     for (int i = 0; i < poseData!.poses.length; i++) {
       if (poseData!.poses[i].confidence > 0.25) {
+        // Sets point1 as the X and Y given by wrist
         if (poseData!.poses[i].joint == Pose.Joint.rightHand) {
           isVisible = true;
-          point1 = poseData!.poses[i].location;
+          rightWrist.x = poseData!.poses[i].location.x;
+          rightWrist.y = poseData!.poses[i].location.y;
+          point1 = rightWrist;
         }
 
+        // Sets Point2 and Elbow as the X and Y given by elbow
         if (poseData!.poses[i].joint == Pose.Joint.rightForearm) {
-          elbow.x = locationX = point2.x = poseData!.poses[i].location.x;
-          elbow.y = locationY = point2.y = poseData!.poses[i].location.y;
+          rightElbow.x = locationX = poseData!.poses[i].location.x;
+          rightElbow.y = locationY = poseData!.poses[i].location.y;
+          point2 = rightElbow;
         }
 
+        // Sets Shoulder as the X and Y given by shoulder
         if (poseData!.poses[i].joint == Pose.Joint.rightShoulder) {
-          shoulder.x = poseData!.poses[i].location.x;
-          shoulder.y = poseData!.poses[i].location.y;
+          rightShoulder.x = poseData!.poses[i].location.x;
+          rightShoulder.y = poseData!.poses[i].location.y;
         }
 
         widgets.add(Positioned(
@@ -494,6 +502,7 @@ class _ARScreenState extends State<ARScreen> {
     return widgets;
   }
 
+  // Will show camera preview and periodically send frames to Vision Pose
   Widget _getScanWidgetByPlatform() {
     return CameraMacOSView(
       key: cameraKey,
@@ -539,8 +548,8 @@ class _ARScreenState extends State<ARScreen> {
       object.rotation.z = Math.atan2(point1.y - point2.y, point1.x - point2.x);
 
       // Set size of object
-      object.scale
-          .setScalar(2.25 * length(point1.x, point1.y, elbow.x, elbow.y) / 260);
+      object.scale.setScalar(
+          2.25 * length(point1.x, point1.y, rightElbow.x, rightElbow.y) / 260);
 
       object.visible = true;
       return;
