@@ -1,16 +1,11 @@
 # ar_app
 
-A new Flutter project.
+AR App
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Functionality right now is limited to flat forearm movement along the X plane. If the user angles their arm forward toward the camera, the calculations for arm length will be thrown off. 
 
-A few resources to get you started if this is your first Flutter project:
+Right now all calculations and arm mapping is hardcoded to the right wrist, elbow and shoulder.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+In the arm length calculation, 260 is the approximate length of the arm model
