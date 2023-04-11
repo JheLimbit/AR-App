@@ -1,0 +1,66 @@
+{
+  "_buildCommand2" : {
+    "command" : "prepareForIndexing",
+    "enableIndexBuildArena" : false,
+    "targets" : null
+  },
+  "buildCommand" : "build",
+  "configuredTargets" : [
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e989d8b2146a8145768218b852a9444a007"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98312b4bc59bbbe2c06c205bf4da6737f5"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e983b57eace53a309053967b5dd90cdcf45"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e989444a69b1edbba6f7dfc85a3958cd286"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98b4e07d11d6a1e8d5a6eb47185aba3678"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e98c291abc6919b2940e47f038fad8ad7ac"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e9830037b09fee48cfce1f8562d753688c8"
+    },
+    {
+      "guid" : "bfdfe7dc352907fc980b868725387e981a6fd1d5d5bbcfd24b74dbfd60f062cc"
+    }
+  ],
+  "containerPath" : "/Users/jerryhe/Documents/Limbitless/AR App/ar_app/macos/Pods/Pods.xcodeproj",
+  "continueBuildingAfterErrors" : true,
+  "enableIndexBuildArena" : false,
+  "hideShellScriptEnvironment" : false,
+  "parameters" : {
+    "action" : "build",
+    "arenaInfo" : {
+      "buildIntermediatesPath" : "",
+      "buildProductsPath" : "",
+      "derivedDataPath" : "/Users/jerryhe/Library/Developer/Xcode/DerivedData",
+      "indexDataStoreFolderPath" : "/Users/jerryhe/Library/Developer/Xcode/DerivedData/Pods-gshlkiptxinnyyaqsfghynqiypjo/Index.noindex/DataStore",
+      "indexEnableDataStore" : true,
+      "indexPCHPath" : "/Users/jerryhe/Library/Developer/Xcode/DerivedData/Pods-gshlkiptxinnyyaqsfghynqiypjo/Index.noindex/PrecompiledHeaders",
+      "pchPath" : ""
+    },
+    "configurationName" : "Release",
+    "overrides" : {
+      "synthesized" : {
+        "table" : {
+          "ENABLE_PREVIEWS" : "NO"
+        }
+      }
+    }
+  },
+  "qos" : "default",
+  "schemeCommand" : "launch",
+  "schemeCommand2" : "launch",
+  "showNonLoggedProgress" : true,
+  "useDryRun" : true,
+  "useImplicitDependencies" : false,
+  "useLegacyBuildLocations" : false,
+  "useParallelTargets" : false
+}

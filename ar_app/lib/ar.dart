@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:async';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter_gl/flutter_gl.dart';
@@ -106,8 +104,8 @@ class _ARScreenState extends State<ARScreen> {
   Pose.PosePoint elbow = Pose.PosePoint(0, 0);
   Pose.PosePoint shoulder = Pose.PosePoint(0, 0);
 
-  var vec = new THREE.Vector3();
-  var pos = new THREE.Vector3();
+  var vec = THREE.Vector3();
+  var pos = THREE.Vector3();
 
   @override
   void initState() {
@@ -128,6 +126,7 @@ class _ARScreenState extends State<ARScreen> {
     super.dispose();
   }
 
+  // Function that will take a picture/frame and send it to Vision Pose
   void onTakePictureButtonPressed() async {
     CameraMacOSFile? file = await controller?.takePicture();
     Directory tempDir = await getTemporaryDirectory();
@@ -136,16 +135,19 @@ class _ARScreenState extends State<ARScreen> {
     if (file != null && mounted) {
       Uint8List? image = file.bytes;
 
+      // Compresses the image to save space
       var input = ImageFile(rawBytes: image!, filePath: tempPath);
       var output = await compressInQueue(ImageFileConfiguration(
           input: input,
-          config: Configuration(jpgQuality: 8, outputType: OutputType.jpg)));
+          config:
+              const Configuration(jpgQuality: 10, outputType: OutputType.jpg)));
 
       // handCamController.processImage(output.rawBytes, const Size(640, 480)).then((data) {
       //   handData = data;
       //   setState(() {});
       // });
 
+      // Sends image to Vision pose and processes it
       cameraController
           .process(output.rawBytes, const Size(640, 480))
           .then((data) {
@@ -155,6 +157,7 @@ class _ARScreenState extends State<ARScreen> {
     }
   }
 
+  // Initializes 3D Scene
   Future<void> initPage() async {
     scene = THREE.Scene();
 
@@ -413,30 +416,30 @@ class _ARScreenState extends State<ARScreen> {
       Pose.Joint.leftHand: Colors.blue,
     };
 
-    Map<Hand.FingerJoint, Color> handColors = {
-      Hand.FingerJoint.thumbCMC: Colors.amber,
-      Hand.FingerJoint.thumbIP: Colors.amber,
-      Hand.FingerJoint.thumbMP: Colors.amber,
-      Hand.FingerJoint.thumbTip: Colors.amber,
-      Hand.FingerJoint.indexDIP: Colors.green,
-      // Use this
-      Hand.FingerJoint.indexMCP: Colors.green,
-      Hand.FingerJoint.indexPIP: Colors.green,
-      Hand.FingerJoint.indexTip: Colors.green,
-      Hand.FingerJoint.middleDIP: Colors.purple,
-      Hand.FingerJoint.middleMCP: Colors.purple,
-      Hand.FingerJoint.middlePIP: Colors.purple,
-      Hand.FingerJoint.middleTip: Colors.purple,
-      Hand.FingerJoint.ringDIP: Colors.pink,
-      Hand.FingerJoint.ringMCP: Colors.pink,
-      Hand.FingerJoint.ringPIP: Colors.pink,
-      Hand.FingerJoint.ringTip: Colors.pink,
-      Hand.FingerJoint.littleDIP: Colors.cyanAccent,
-      // Use this compare to length 50 pixels
-      Hand.FingerJoint.littleMCP: Colors.cyanAccent,
-      Hand.FingerJoint.littlePIP: Colors.cyanAccent,
-      Hand.FingerJoint.littleTip: Colors.cyanAccent
-    };
+    // Map<Hand.FingerJoint, Color> handColors = {
+    //   Hand.FingerJoint.thumbCMC: Colors.amber,
+    //   Hand.FingerJoint.thumbIP: Colors.amber,
+    //   Hand.FingerJoint.thumbMP: Colors.amber,
+    //   Hand.FingerJoint.thumbTip: Colors.amber,
+    //   Hand.FingerJoint.indexDIP: Colors.green,
+    //   // Use this
+    //   Hand.FingerJoint.indexMCP: Colors.green,
+    //   Hand.FingerJoint.indexPIP: Colors.green,
+    //   Hand.FingerJoint.indexTip: Colors.green,
+    //   Hand.FingerJoint.middleDIP: Colors.purple,
+    //   Hand.FingerJoint.middleMCP: Colors.purple,
+    //   Hand.FingerJoint.middlePIP: Colors.purple,
+    //   Hand.FingerJoint.middleTip: Colors.purple,
+    //   Hand.FingerJoint.ringDIP: Colors.pink,
+    //   Hand.FingerJoint.ringMCP: Colors.pink,
+    //   Hand.FingerJoint.ringPIP: Colors.pink,
+    //   Hand.FingerJoint.ringTip: Colors.pink,
+    //   Hand.FingerJoint.littleDIP: Colors.cyanAccent,
+    //   // Use this compare to length 50 pixels
+    //   Hand.FingerJoint.littleMCP: Colors.cyanAccent,
+    //   Hand.FingerJoint.littlePIP: Colors.cyanAccent,
+    //   Hand.FingerJoint.littleTip: Colors.cyanAccent
+    // };
 
     List<Widget> widgets = [];
 
@@ -458,9 +461,7 @@ class _ARScreenState extends State<ARScreen> {
     isVisible = false;
 
     for (int i = 0; i < poseData!.poses.length; i++) {
-      print(poseData!.poses[i].joint);
-
-      if (poseData!.poses[i].confidence > 0.5) {
+      if (poseData!.poses[i].confidence > 0.25) {
         if (poseData!.poses[i].joint == Pose.Joint.rightHand) {
           isVisible = true;
           point1 = poseData!.poses[i].location;
@@ -510,7 +511,7 @@ class _ARScreenState extends State<ARScreen> {
       onCameraInizialized: (CameraMacOSController controller) {
         setState(() {
           this.controller = controller;
-          Timer.periodic(const Duration(milliseconds: 120), (_) {
+          Timer.periodic(const Duration(milliseconds: 500), (_) {
             onTakePictureButtonPressed();
           });
         });
@@ -518,6 +519,7 @@ class _ARScreenState extends State<ARScreen> {
     );
   }
 
+  // Calculates the length/distance between two cartesian points
   double length(double x, double y, double x2, double y2) {
     return Math.sqrt(Math.pow(x2 - x, 2) + Math.pow(y2 - y, 2));
   }
@@ -536,8 +538,9 @@ class _ARScreenState extends State<ARScreen> {
       // Set angle of arm based on two points (most likely elbow and wrist)
       object.rotation.z = Math.atan2(point1.y - point2.y, point1.x - point2.x);
 
-      object.scale.setScalar(
-          2 * length(shoulder.x, shoulder.y, elbow.x, elbow.y) / 260);
+      // Set size of object
+      object.scale
+          .setScalar(2.25 * length(point1.x, point1.y, elbow.x, elbow.y) / 260);
 
       object.visible = true;
       return;

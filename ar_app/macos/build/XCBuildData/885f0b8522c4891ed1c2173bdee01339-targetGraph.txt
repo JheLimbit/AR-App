@@ -1,0 +1,22 @@
+Target dependency graph (8 targets)
+FlutterMacOS in Pods, no dependencies
+apple_vision_hand in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+apple_vision_pose in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+camera_macos in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+three3d_egl_osx in Pods, no dependencies
+flutter_gl_macos in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+three3d_egl_osx in Pods (explicit)
+path_provider_foundation in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+Pods-Runner in Pods, depends on:
+FlutterMacOS in Pods (explicit)
+apple_vision_hand in Pods (explicit)
+apple_vision_pose in Pods (explicit)
+camera_macos in Pods (explicit)
+flutter_gl_macos in Pods (explicit)
+path_provider_foundation in Pods (explicit)
+three3d_egl_osx in Pods (explicit)
