@@ -1,5 +1,4 @@
 import 'package:example/ar.dart';
-import 'package:three_dart/three_dart.dart';
 import 'package:flutter/material.dart';
 
 void main() {

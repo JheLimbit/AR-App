@@ -91,20 +91,9 @@ class _ARScreenState extends State<ARScreen> {
   late double deviceWidth;
   late double deviceHeight;
 
-  double locationX = 320;
-  double locationY = 240;
+  late double locationX;
+  late double locationY;
   bool isVisible = false;
-
-  var point1;
-  var point2;
-
-  var rightElbow;
-  var rightShoulder;
-  var rightWrist;
-
-  var leftElbow;
-  var leftShoulder;
-  var leftWrist;
 
   var vec = THREE.Vector3();
   var pos = THREE.Vector3();
@@ -397,6 +386,17 @@ class _ARScreenState extends State<ARScreen> {
             }));
   }
 
+  var point1;
+  var point2;
+
+  var rightElbow;
+  var rightShoulder;
+  var rightWrist;
+
+  var leftElbow;
+  var leftShoulder;
+  var leftWrist;
+
   List<Widget> showPoints() {
     if (poseData == null || poseData!.poses.isEmpty) return [];
     // if (handData == null || handData!.poses.isEmpty) return [];
@@ -455,27 +455,47 @@ class _ARScreenState extends State<ARScreen> {
 
     isVisible = false;
 
+    point1 = null;
+    point2 = null;
+
+    rightElbow = null;
+    rightShoulder = null;
+    rightWrist = null;
+
+    leftElbow = null;
+    leftShoulder = null;
+    leftWrist = null;
+
     for (int i = 0; i < poseData!.poses.length; i++) {
-      if (poseData!.poses[i].confidence > 0.25) {
-        // Sets point1 as the X and Y given by wrist
+      if (poseData!.poses[i].confidence > 0.5) {
         if (poseData!.poses[i].joint == Pose.Joint.rightHand) {
-          isVisible = true;
-          rightWrist.x = poseData!.poses[i].location.x;
-          rightWrist.y = poseData!.poses[i].location.y;
-          point1 = rightWrist;
+          rightWrist = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
         }
 
-        // Sets Point2 and Elbow as the X and Y given by elbow
         if (poseData!.poses[i].joint == Pose.Joint.rightForearm) {
-          rightElbow.x = locationX = poseData!.poses[i].location.x;
-          rightElbow.y = locationY = poseData!.poses[i].location.y;
-          point2 = rightElbow;
+          rightElbow = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
         }
 
-        // Sets Shoulder as the X and Y given by shoulder
         if (poseData!.poses[i].joint == Pose.Joint.rightShoulder) {
-          rightShoulder.x = poseData!.poses[i].location.x;
-          rightShoulder.y = poseData!.poses[i].location.y;
+          rightShoulder = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
+        }
+
+        if (poseData!.poses[i].joint == Pose.Joint.leftShoulder) {
+          leftShoulder = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
+        }
+
+        if (poseData!.poses[i].joint == Pose.Joint.leftForearm) {
+          leftElbow = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
+        }
+
+        if (poseData!.poses[i].joint == Pose.Joint.leftHand) {
+          leftWrist = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
         }
 
         // Adds colored points onto screen
@@ -490,6 +510,29 @@ class _ARScreenState extends State<ARScreen> {
                   borderRadius: BorderRadius.circular(5)),
             )));
       }
+    }
+
+    // If both wrists are present, will default to right arm
+    if (rightWrist != null && leftWrist != null && rightElbow != null) {
+      isVisible = true;
+      point1 = rightWrist;
+      point2 = rightElbow;
+      locationX = rightElbow.x;
+      locationY = rightElbow.y;
+      // If only the right wrist is present, will display on right arm
+    } else if (rightWrist != null && rightElbow != null) {
+      isVisible = true;
+      point1 = rightWrist;
+      point2 = rightElbow;
+      locationX = rightElbow.x;
+      locationY = rightElbow.y;
+      // If only the left wrist is present, will display on left arm
+    } else if (leftWrist != null && leftElbow != null) {
+      isVisible = true;
+      point1 = leftWrist;
+      point2 = leftElbow;
+      locationX = leftElbow.x;
+      locationY = leftElbow.y;
     }
 
     // Updates the arm model location and rotation
@@ -531,7 +574,7 @@ class _ARScreenState extends State<ARScreen> {
   // This function is responsible for the responsive movement of the arm object
   void setLocation() {
     if (isVisible) {
-      // This code block converts 2D X and Y to 3D coordinates using Z = 0.5
+      // This code block converts 2D X and Y to 3D coordinates using arbitrary Z = 0.5
       vec.set((locationX / 640) * 2 - 1, ((locationY) / 480) * 2 - 1, 0.5);
       vec.unproject(camera);
       vec.sub(camera.position).normalize();
@@ -544,7 +587,7 @@ class _ARScreenState extends State<ARScreen> {
 
       // Set size of object
       object.scale.setScalar(
-          2.25 * length(point1.x, point1.y, rightElbow.x, rightElbow.y) / 260);
+          2.25 * length(point1.x, point1.y, point2.x, point2.y) / 260);
 
       object.visible = true;
       return;
