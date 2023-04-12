@@ -91,8 +91,6 @@ class _ARScreenState extends State<ARScreen> {
   late double deviceWidth;
   late double deviceHeight;
 
-  late double locationX;
-  late double locationY;
   bool isVisible = false;
 
   var vec = THREE.Vector3();
@@ -517,25 +515,28 @@ class _ARScreenState extends State<ARScreen> {
       isVisible = true;
       point1 = rightWrist;
       point2 = rightElbow;
-      locationX = rightElbow.x;
-      locationY = rightElbow.y;
       // If only the right wrist is present, will display on right arm
     } else if (rightWrist != null && rightElbow != null) {
       isVisible = true;
       point1 = rightWrist;
       point2 = rightElbow;
-      locationX = rightElbow.x;
-      locationY = rightElbow.y;
       // If only the left wrist is present, will display on left arm
     } else if (leftWrist != null && leftElbow != null) {
       isVisible = true;
       point1 = leftWrist;
       point2 = leftElbow;
-      locationX = leftElbow.x;
-      locationY = leftElbow.y;
+    } else {
+      widgets.add(Positioned(
+          bottom: 240,
+          left: 320,
+          child: Container(
+            color: Colors.blue,
+            child: const SizedBox(
+                height: 50, width: 100, child: Text("No valid points found")),
+          )));
     }
 
-    // Updates the arm model location and rotation
+    // Updates the arm model location and rotation along the Z axis
     setLocation();
     return widgets;
   }
@@ -575,7 +576,7 @@ class _ARScreenState extends State<ARScreen> {
   void setLocation() {
     if (isVisible) {
       // This code block converts 2D X and Y to 3D coordinates using arbitrary Z = 0.5
-      vec.set((locationX / 640) * 2 - 1, ((locationY) / 480) * 2 - 1, 0.5);
+      vec.set((point2.x / 640) * 2 - 1, ((point2.y) / 480) * 2 - 1, 0.5);
       vec.unproject(camera);
       vec.sub(camera.position).normalize();
       var distance = -camera.position.z / vec.z;
