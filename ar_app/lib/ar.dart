@@ -395,6 +395,9 @@ class _ARScreenState extends State<ARScreen> {
   var leftShoulder;
   var leftWrist;
 
+  var root;
+  var neck;
+
   List<Widget> showPoints() {
     if (poseData == null || poseData!.poses.isEmpty) return [];
     // if (handData == null || handData!.poses.isEmpty) return [];
@@ -407,6 +410,8 @@ class _ARScreenState extends State<ARScreen> {
       Pose.Joint.leftForearm: Colors.yellow, // Elbow
       Pose.Joint.leftUpLeg: Colors.green, // Hip
       Pose.Joint.leftHand: Colors.blue, // Wrist
+      Pose.Joint.neck: Colors.red,
+      Pose.Joint.root: Colors.red
     };
 
     // Map<Hand.FingerJoint, Color> handColors = {
@@ -464,8 +469,11 @@ class _ARScreenState extends State<ARScreen> {
     leftShoulder = null;
     leftWrist = null;
 
+    neck = null;
+    root = null;
+
     for (int i = 0; i < poseData!.poses.length; i++) {
-      if (poseData!.poses[i].confidence > 0.5) {
+      if (poseData!.poses[i].confidence > 0.25) {
         if (poseData!.poses[i].joint == Pose.Joint.rightHand) {
           rightWrist = Pose.PosePoint(
               poseData!.poses[i].location.x, poseData!.poses[i].location.y);
@@ -493,6 +501,16 @@ class _ARScreenState extends State<ARScreen> {
 
         if (poseData!.poses[i].joint == Pose.Joint.leftHand) {
           leftWrist = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
+        }
+
+        if (poseData!.poses[i].joint == Pose.Joint.root) {
+          root = Pose.PosePoint(
+              poseData!.poses[i].location.x, poseData!.poses[i].location.y);
+        }
+
+        if (poseData!.poses[i].joint == Pose.Joint.neck) {
+          neck = Pose.PosePoint(
               poseData!.poses[i].location.x, poseData!.poses[i].location.y);
         }
 
@@ -586,9 +604,13 @@ class _ARScreenState extends State<ARScreen> {
       // Set angle of arm based on two points (most likely elbow and wrist)
       object.rotation.z = Math.atan2(point1.y - point2.y, point1.x - point2.x);
 
-      // Set size of object
-      object.scale.setScalar(
-          2.25 * length(point1.x, point1.y, point2.x, point2.y) / 260);
+      // Leaves function early and doesn't display arm until the full body is visible
+      if (neck == null || root == null) return;
+
+      // Set size of object, sorry for the weird flutter autoformatting here
+      // Calculates based on the root and neck, since these points are some of the only "stationary" points
+      object.scale
+          .setScalar(0.9 * length(root.x, root.y, neck.x, neck.y) / 260);
 
       object.visible = true;
       return;
