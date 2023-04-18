@@ -4,7 +4,7 @@ AR App
 
 ## Technical Details
 
-Functionality right now is limited to flat forearm movement along the X plane, affecting the Z rotation of the model. If the user angles their arm forward toward the camera, the calculations for arm length will be thrown off.
+Functionality right now is limited to flat forearm movement along the X plane, affecting the Z rotation of the model. 
 
 Additionally, the current approach only allows for rotation along one axis right now. Adding other axises (?) of rotation changes the result drastically.
 
